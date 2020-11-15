@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Main.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lab2</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Main.java</span></div><h1>Main.java</h1><pre class="source lang-java linenums">import java.util.Scanner;
+
+<span class="nc" id="L3">public class Main {</span>
+    public static void main(String[] args) {
+<span class="nc" id="L5">        Scanner scanner = new Scanner(System.in);</span>
+
+<span class="nc" id="L7">        System.out.print(&quot;Enter name of file .csv &quot;);</span>
+<span class="nc" id="L8">        String inDate = scanner.next();</span>
+<span class="nc" id="L9">        System.out.print(&quot;\nEnter delim in .csv: &quot;);</span>
+<span class="nc" id="L10">        String inDelim = scanner.next();</span>
+<span class="nc" id="L11">        System.out.print(&quot;\nEnter a file name to output .txt: &quot;);</span>
+<span class="nc" id="L12">        String outDate = scanner.next();</span>
+<span class="nc" id="L13">        System.out.print(&quot;\nEnter delim in .txt: &quot;);</span>
+<span class="nc" id="L14">        String outDelim = scanner.next();</span>
+<span class="nc" id="L15">        Parser parser = new Parser(inDelim, outDelim);</span>
+<span class="nc" id="L16">        parser.checkFile(inDate, outDate);</span>
+<span class="nc" id="L17">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

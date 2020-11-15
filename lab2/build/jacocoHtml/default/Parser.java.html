@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Parser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lab2</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Parser.java</span></div><h1>Parser.java</h1><pre class="source lang-java linenums">import java.io.*;
+
+public class Parser {
+
+<span class="fc" id="L5">    private String delimIn = &quot;,&quot;;</span>
+<span class="fc" id="L6">    private String delimOut = &quot;+&quot;;</span>
+
+<span class="fc" id="L8">    public Parser(){}</span>
+
+<span class="fc" id="L10">    public Parser(String delIn, String delOut) {</span>
+<span class="fc" id="L11">        this.delimIn = delIn;</span>
+<span class="fc" id="L12">        this.delimOut = delOut;</span>
+<span class="fc" id="L13">    }</span>
+    public void checkFile(String fileIn, String fileOut) {
+        BufferedReader br;
+        BufferedWriter bw;
+        try {
+<span class="fc" id="L18">            br = new BufferedReader(new FileReader(fileIn));</span>
+<span class="fc" id="L19">            bw = new BufferedWriter(new FileWriter(fileOut));</span>
+<span class="fc" id="L20">            String string = br.readLine();</span>
+<span class="fc bfc" id="L21" title="All 2 branches covered.">            while (string != null) {</span>
+<span class="fc" id="L22">                bw.write(this.checkStr(string) + &quot;\n&quot;);</span>
+<span class="fc" id="L23">                bw.flush();</span>
+<span class="fc" id="L24">                string = br.readLine();</span>
+            }
+<span class="fc" id="L26">            br.close();</span>
+<span class="fc" id="L27">            bw.close();</span>
+        }
+<span class="nc" id="L29">        catch (IOException e) {</span>
+<span class="nc" id="L30">            e.printStackTrace();</span>
+<span class="fc" id="L31">        }</span>
+<span class="fc" id="L32">    }</span>
+
+    public String checkStr(String in) {
+<span class="fc" id="L35">        String cI = in;</span>
+<span class="fc" id="L36">        StringBuilder result = new StringBuilder();</span>
+
+        while (true) {
+<span class="fc" id="L39">            String res = &quot;&quot;;</span>
+<span class="fc" id="L40">            int index = this.workWithCsv(cI);</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">            if (cI.charAt(0) == '&quot;') {</span>
+<span class="fc" id="L42">                res = cI.substring(1, index);</span>
+<span class="fc" id="L43">                index += 2;</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">            } else if (cI.contains(&quot;,&quot;)) {</span>
+<span class="fc" id="L45">                index = cI.indexOf(',') + 1;</span>
+<span class="fc" id="L46">                res = cI.substring(0, index - 1);</span>
+            }
+<span class="fc bfc" id="L48" title="All 4 branches covered.">            if (index != -1 &amp;&amp; index &lt; cI.length()) {</span>
+<span class="fc" id="L49">                result.append(String.format(&quot;%d%s&quot;, res.length(), delimOut));</span>
+<span class="fc" id="L50">                cI = cI.substring(index);</span>
+            } else {
+<span class="fc bfc" id="L52" title="All 2 branches covered.">                result.append(String.format(&quot;%d&quot;, cI.length() - (cI.charAt(0) == '&quot;' ? 2 : 0)));</span>
+<span class="fc" id="L53">                break;</span>
+            }
+<span class="fc" id="L55">        }</span>
+<span class="fc" id="L56">        return result.toString();</span>
+
+    }
+
+    private int workWithCsv(String in) {
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        if (in.charAt(0) == '&quot;') {</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">            long numberQuotes = in.chars().filter(ch -&gt; ch == '&quot;').count();</span>
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">            if (numberQuotes % 2 != 0)</span>
+<span class="nc" id="L64">                throw new IllegalArgumentException(&quot;!!!No close!!!! \&quot;&quot;);</span>
+<span class="fc" id="L65">            String temp = in.substring(1);</span>
+<span class="fc" id="L66">            int cutLeng = 1;</span>
+<span class="fc" id="L67">            int numQuote = 1;</span>
+            while (true) {
+<span class="fc" id="L69">                int indexQuote = temp.indexOf('&quot;');</span>
+<span class="fc bfc" id="L70" title="All 6 branches covered.">                if (indexQuote == temp.length() - 1 || (numQuote % 2 != 0 &amp;&amp; temp.charAt(indexQuote + 1) == ','))</span>
+<span class="fc" id="L71">                    return indexQuote + cutLeng;</span>
+                else {
+<span class="fc" id="L73">                    numQuote++;</span>
+<span class="fc" id="L74">                    cutLeng += indexQuote + 1;</span>
+<span class="fc" id="L75">                    temp = temp.substring(indexQuote + 1);</span>
+                }
+<span class="fc" id="L77">            }</span>
+        } else {
+<span class="fc" id="L79">            return in.indexOf(&quot;,&quot;);</span>
+        }
+    }
+
+    public String getDelimIn(){
+<span class="fc" id="L84">        return this.delimIn;</span>
+    }
+
+    public String getDelimOut(){
+<span class="fc" id="L88">        return this.delimOut;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

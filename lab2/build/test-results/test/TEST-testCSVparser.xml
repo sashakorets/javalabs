@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="testCSVparser" tests="3" skipped="0" failures="0" errors="0" timestamp="2020-11-15T20:44:51" hostname="pepper236723" time="0.02">
+  <properties/>
+  <testcase name="fileTest" classname="testCSVparser" time="0.017"/>
+  <testcase name="gettersTest" classname="testCSVparser" time="0.0"/>
+  <testcase name="testString" classname="testCSVparser" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
