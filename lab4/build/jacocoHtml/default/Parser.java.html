@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Parser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lab4</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Parser.java</span></div><h1>Parser.java</h1><pre class="source lang-java linenums">import java.io.*;
+
+public class Parser {
+
+<span class="pc" id="L5">    private String inputDelimiter = &quot;,&quot;;</span>
+<span class="pc" id="L6">    private String outputDelimiter = &quot;+&quot;;</span>
+
+<span class="fc" id="L8">    public Parser() {}</span>
+
+<span class="nc" id="L10">    public Parser(String inputDelimiter, String outputDelimiter) {</span>
+<span class="nc" id="L11">        this.inputDelimiter = inputDelimiter;</span>
+<span class="nc" id="L12">        this.outputDelimiter = outputDelimiter;</span>
+<span class="nc" id="L13">    }</span>
+
+    public String parseString(String input) {
+<span class="fc" id="L16">        String inputCopy = input;</span>
+<span class="fc" id="L17">        StringBuilder result = new StringBuilder();</span>
+
+        while (true) {
+<span class="fc" id="L20">            String block = &quot;&quot;;</span>
+<span class="fc" id="L21">            int endIndex = this.getCSVBlockEndIndex(inputCopy);</span>
+<span class="pc bpc" id="L22" title="1 of 2 branches missed.">            if (inputCopy.charAt(0) == '&quot;') {</span>
+<span class="nc" id="L23">                block = inputCopy.substring(1, endIndex);</span>
+<span class="nc" id="L24">                endIndex += 2;</span>
+<span class="fc bfc" id="L25" title="All 2 branches covered.">            } else if (inputCopy.contains(&quot;,&quot;)) {</span>
+<span class="fc" id="L26">                endIndex = inputCopy.indexOf(',') + 1;</span>
+<span class="fc" id="L27">                block = inputCopy.substring(0, endIndex - 1);</span>
+            }
+
+<span class="pc bpc" id="L30" title="1 of 4 branches missed.">            if (endIndex != -1 &amp;&amp; endIndex &lt; inputCopy.length()) {</span>
+<span class="fc" id="L31">                result.append(String.format(&quot;%d%s&quot;, block.length(), outputDelimiter));</span>
+<span class="fc" id="L32">                inputCopy = inputCopy.substring(endIndex);</span>
+            } else {
+                // We reached last value in this line
+<span class="pc bpc" id="L35" title="1 of 2 branches missed.">                result.append(String.format(&quot;%d&quot;, inputCopy.length() - (inputCopy.charAt(0) == '&quot;' ? 2 : 0)));</span>
+<span class="fc" id="L36">                break;</span>
+            }
+<span class="fc" id="L38">        }</span>
+
+<span class="fc" id="L40">        return result.toString();</span>
+    }
+
+    private int getCSVBlockEndIndex(String input) {
+<span class="pc bpc" id="L44" title="1 of 2 branches missed.">        if (input.charAt(0) == '&quot;') {</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">            long numOfQuotes = input.chars().filter(ch -&gt; ch == '&quot;').count();</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">            if (numOfQuotes%2 != 0)</span>
+<span class="nc" id="L47">                throw new IllegalArgumentException(&quot;no closing \&quot;&quot;);</span>
+
+<span class="nc" id="L49">            String temp = input.substring(1);</span>
+<span class="nc" id="L50">            int cutPartLength = 1;</span>
+<span class="nc" id="L51">            int quoteNum = 1;</span>
+            while (true) {
+<span class="nc" id="L53">                int quoteIndex = temp.indexOf('&quot;');</span>
+<span class="nc bnc" id="L54" title="All 6 branches missed.">                if (quoteIndex == temp.length() - 1 || (quoteNum%2 != 0 &amp;&amp; temp.charAt(quoteIndex + 1) == ','))</span>
+<span class="nc" id="L55">                    return quoteIndex + cutPartLength;</span>
+                else {
+<span class="nc" id="L57">                    quoteNum++;</span>
+<span class="nc" id="L58">                    cutPartLength += quoteIndex + 1;</span>
+<span class="nc" id="L59">                    temp = temp.substring(quoteIndex + 1);</span>
+                }
+<span class="nc" id="L61">            }</span>
+        } else {
+<span class="fc" id="L63">            return input.indexOf(&quot;,&quot;);</span>
+        }
+    }
+
+//    public String getInputDelimiter() {
+//        return inputDelimiter;
+//    }
+//
+//    public String getOutputDelimiter() {
+//        return outputDelimiter;
+//    }
+//
+//    public void setInputDelimiter(String inputDelimiter) {
+//        this.inputDelimiter = inputDelimiter;
+//    }
+//
+//    public void setOutputDelimiter(String outputDelimiter) {
+//        this.outputDelimiter = outputDelimiter;
+//    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

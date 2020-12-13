@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OutWrite.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lab4</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">OutWrite.java</span></div><h1>OutWrite.java</h1><pre class="source lang-java linenums">import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.concurrent.BlockingQueue;
+
+public class OutWrite implements Runnable {
+
+    private BlockingQueue&lt;String&gt; queue;
+
+    private String outputFilePath;
+
+<span class="nc" id="L12">    public OutWrite(BlockingQueue&lt;String&gt; queue, String outputFilePath) {</span>
+<span class="nc" id="L13">        this.queue = queue;</span>
+<span class="nc" id="L14">        this.outputFilePath = outputFilePath;</span>
+<span class="nc" id="L15">    }</span>
+
+    @Override
+    public void run() {
+<span class="nc" id="L19">        BufferedWriter writer = null;</span>
+
+        try {
+<span class="nc" id="L22">            writer = new BufferedWriter(new FileWriter(outputFilePath));</span>
+            while (true) {
+<span class="nc" id="L24">                String temp = queue.take();</span>
+<span class="nc bnc" id="L25" title="All 2 branches missed.">                if (temp.equals(&quot;!&quot;)) {</span>
+<span class="nc" id="L26">                    break;</span>
+                }
+<span class="nc" id="L28">                writer.write(temp + &quot;\n&quot;);</span>
+<span class="nc" id="L29">                writer.flush();</span>
+<span class="nc" id="L30">            }</span>
+<span class="nc" id="L31">        } catch (IOException | InterruptedException ie) {</span>
+<span class="nc" id="L32">            ie.printStackTrace();</span>
+        } finally {
+<span class="nc bnc" id="L34" title="All 2 branches missed.">            if (writer != null) {</span>
+                try {
+<span class="nc" id="L36">                    writer.close();</span>
+<span class="nc" id="L37">                } catch (IOException e) {</span>
+<span class="nc" id="L38">                    e.printStackTrace();</span>
+<span class="nc" id="L39">                }</span>
+            }
+        }
+<span class="nc" id="L42">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

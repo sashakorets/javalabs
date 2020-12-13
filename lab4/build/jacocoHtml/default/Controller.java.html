@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Controller.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lab4</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Controller.java</span></div><h1>Controller.java</h1><pre class="source lang-java linenums">import java.io.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+<span class="nc bnc" id="L7" title="All 2 branches missed.">public class Controller {</span>
+<span class="nc" id="L8">    private String inputDelimiter = &quot;,&quot;;</span>
+<span class="nc" id="L9">    private String outputDelimiter = &quot;+&quot;;</span>
+
+<span class="nc" id="L11">    private int numOfWorkers = 2;</span>
+    private List&lt;ParserWorker&gt; workers;
+    private Parser parser;
+
+<span class="nc" id="L15">    public Controller() { }</span>
+
+<span class="nc" id="L17">    public Controller(String inputDelimiter, String outputDelimiter, int numOfWorkers) {</span>
+<span class="nc" id="L18">        this.inputDelimiter = inputDelimiter;</span>
+<span class="nc" id="L19">        this.outputDelimiter = outputDelimiter;</span>
+<span class="nc" id="L20">        this.numOfWorkers = numOfWorkers;</span>
+
+<span class="nc" id="L22">        this.workers = new LinkedList&lt;&gt;();</span>
+<span class="nc" id="L23">        this.parser = new Parser(inputDelimiter, outputDelimiter);</span>
+<span class="nc" id="L24">    }</span>
+
+    public void parseDirectory(String directoryPath, String outputFilePath) {
+<span class="nc" id="L27">        BlockingQueue&lt;String&gt; inputQueue = new LinkedBlockingQueue&lt;&gt;(1);</span>
+<span class="nc" id="L28">        BlockingQueue&lt;String&gt; outputQueue = new LinkedBlockingQueue&lt;&gt;(1);</span>
+
+<span class="nc bnc" id="L30" title="All 2 branches missed.">        for (int i = 0; i &lt; numOfWorkers; i++) {</span>
+<span class="nc" id="L31">            ParserWorker worker = new ParserWorker(this.parser, inputQueue, outputQueue);</span>
+<span class="nc" id="L32">            Thread thread = new Thread(worker);</span>
+<span class="nc" id="L33">            thread.start();</span>
+<span class="nc" id="L34">            workers.add(worker);</span>
+        }
+
+<span class="nc" id="L37">        System.out.println(&quot;started all workers&quot;);</span>
+
+<span class="nc" id="L39">        Thread output = new Thread(new OutWrite(outputQueue, outputFilePath));</span>
+<span class="nc" id="L40">        output.start();</span>
+
+<span class="nc" id="L42">        File folder = new File(directoryPath);</span>
+<span class="nc" id="L43">        File[] files = folder.listFiles();</span>
+<span class="nc bnc" id="L44" title="All 4 branches missed.">        assert files != null;</span>
+
+<span class="nc bnc" id="L46" title="All 2 branches missed.">        for (File file : files) {</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">            if (file.isFile()) {</span>
+                //System.out.println(&quot;start file: &quot; + file.getPath());
+
+<span class="nc" id="L50">                BufferedReader reader = null;</span>
+                try {
+<span class="nc" id="L52">                    reader =  new BufferedReader(new FileReader(file));</span>
+<span class="nc" id="L53">                    String line = reader.readLine();</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">                    while (line != null) {</span>
+<span class="nc" id="L55">                        inputQueue.put(line);</span>
+<span class="nc" id="L56">                        line = reader.readLine();</span>
+                    }
+<span class="nc" id="L58">                } catch (IOException | InterruptedException e) {</span>
+<span class="nc" id="L59">                    e.printStackTrace();</span>
+                } finally {
+<span class="nc bnc" id="L61" title="All 2 branches missed.">                    if (reader != null) {</span>
+                        try {
+<span class="nc" id="L63">                            reader.close();</span>
+<span class="nc" id="L64">                        } catch (IOException e) {</span>
+<span class="nc" id="L65">                            e.printStackTrace();</span>
+<span class="nc" id="L66">                        }</span>
+                    }
+
+                    //System.out.println(&quot;finished file: &quot; + file.getPath());
+                }
+            }
+        }
+
+        try {
+<span class="nc bnc" id="L75" title="All 4 branches missed.">            while (!inputQueue.isEmpty() || !outputQueue.isEmpty())</span>
+<span class="nc" id="L76">                Thread.sleep(100);</span>
+
+<span class="nc bnc" id="L78" title="All 2 branches missed.">            for (ParserWorker worker: workers)</span>
+<span class="nc" id="L79">                inputQueue.put(&quot;!&quot;);</span>
+
+<span class="nc bnc" id="L81" title="All 4 branches missed.">            while (!inputQueue.isEmpty() || !outputQueue.isEmpty())</span>
+<span class="nc" id="L82">                Thread.sleep(100);</span>
+
+<span class="nc" id="L84">            outputQueue.put(&quot;!&quot;);</span>
+
+            // System.out.println(&quot;finished all workers &quot;);
+
+<span class="nc" id="L88">            output.join();</span>
+            //System.out.println(&quot;finished output&quot;);
+<span class="nc" id="L90">        } catch (InterruptedException e) {</span>
+<span class="nc" id="L91">            e.printStackTrace();</span>
+<span class="nc" id="L92">        }</span>
+<span class="nc" id="L93">    }</span>
+
+//    public String getInputDelimiter() {
+//        return inputDelimiter;
+//    }
+//
+//    public void setInputDelimiter(String inputDelimiter) {
+//        this.inputDelimiter = inputDelimiter;
+//    }
+//
+//    public String getOutputDelimiter() {
+//        return outputDelimiter;
+//    }
+//
+//    public void setOutputDelimiter(String outputDelimiter) {
+//        this.outputDelimiter = outputDelimiter;
+//    }
+//
+//    public int getNumOfWorkers() {
+//        return numOfWorkers;
+//    }
+//
+//    public void setNumOfWorkers(int numOfWorkers) {
+//        this.numOfWorkers = numOfWorkers;
+//    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ParserWorker.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lab4</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">ParserWorker.java</span></div><h1>ParserWorker.java</h1><pre class="source lang-java linenums">import java.util.concurrent.BlockingQueue;
+
+public class ParserWorker implements Runnable {
+    private Parser parser;
+
+    private BlockingQueue&lt;String&gt; inputQueue;
+    private BlockingQueue&lt;String&gt; outputQueue;
+
+    public ParserWorker(Parser parser,
+                        BlockingQueue&lt;String&gt; inputQueue,
+<span class="fc" id="L11">                        BlockingQueue&lt;String&gt; outputQueue) {</span>
+<span class="fc" id="L12">        this.parser = parser;</span>
+
+<span class="fc" id="L14">        this.inputQueue = inputQueue;</span>
+<span class="fc" id="L15">        this.outputQueue = outputQueue;</span>
+<span class="fc" id="L16">    }</span>
+
+    @Override
+    public void run() {
+        try {
+            while (true) {
+<span class="fc" id="L22">                String temp = inputQueue.take();</span>
+<span class="pc bpc" id="L23" title="1 of 2 branches missed.">                if (temp.equals(&quot;!&quot;))</span>
+<span class="nc" id="L24">                    break;</span>
+<span class="fc" id="L25">                outputQueue.put(parser.parseString(temp));</span>
+<span class="fc" id="L26">            }</span>
+<span class="fc" id="L27">        } catch (InterruptedException ie) {</span>
+<span class="fc" id="L28">            System.out.println(Thread.currentThread().isInterrupted());</span>
+<span class="pc bpc" id="L29" title="1 of 2 branches missed.">            if (!(Thread.currentThread().isInterrupted()))</span>
+<span class="fc" id="L30">                ie.printStackTrace();</span>
+<span class="nc" id="L31">        }</span>
+<span class="fc" id="L32">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
