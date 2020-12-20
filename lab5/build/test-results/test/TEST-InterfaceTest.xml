@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="InterfaceTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2020-12-20T22:33:54" hostname="pepper236723" time="0.087">
+  <properties/>
+  <testcase name="singletonInterfacesShouldNotBeSame()" classname="InterfaceTest" time="0.082"/>
+  <testcase name="shouldBind()" classname="InterfaceTest" time="0.003"/>
+  <testcase name="shouldOverrideLastBinding()" classname="InterfaceTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
